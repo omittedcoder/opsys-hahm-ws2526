@@ -1,3 +1,6 @@
 #!/bin/sh
 
-echo 'Hello World!'
+echo 'Hello Batch!'
+
+gcc -o helloworld helloworld.c
+./helloworld
