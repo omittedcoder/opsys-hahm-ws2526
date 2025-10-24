@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 /*
 1. If no command line arguments are given, the files and directories within the current
@@ -18,10 +22,49 @@ Cannot access a02 should be printed.
 4. You must create a Makefile such that when someone types make in your working
 directory it will compile the program with the name listdir.
 
-use system commands opendir, closedir, readdir, getopt
+use system commands opendir, closedir, readdir, (getopt)
 */
 
 int main(int argc, char *argv[]) {
-    printf("Hello World\n");
+
+    // set h flag
+    bool hiddenflag = false;
+    for(int i = 1; i < argc; i++) {
+        if(argv[i][0] == '-' && argv[i][1] == 'h') {
+                hiddenflag = true;
+        }
+    }
+
+    // read all directories from paramaters
+    for(int i = 1; i < argc; i++) {
+        // skip flags
+        if(argv[i][0] == '-')
+            continue;
+        
+        DIR *d;
+        struct dirent *dir;
+        
+        // handle error
+        d = opendir(argv[i]);
+        if (!d) {
+            //perror(argv[0]);
+            //exit(1);
+            printf("Cannot access %s\n", argv[i]);
+            closedir(d);
+            continue;
+        }
+
+        // list directory
+        printf("%s:\n", argv[i]);
+        while ((dir = readdir(d)) != NULL) {
+            // skip hidden files if hidden flag not set
+            if(!hiddenflag && dir->d_name[0] == '.')
+                continue;
+            printf("  %s\n", dir->d_name);
+        } 
+
+        closedir(d);
+    }
+
     return 0;
 }
