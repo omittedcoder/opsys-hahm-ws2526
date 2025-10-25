@@ -1,8 +1,9 @@
 # Ignore all
 *
-.*
 
 # Unignore all with extensions and more
 !*.*
-
 !Makefile
+
+# ignore vscode
+.vscode

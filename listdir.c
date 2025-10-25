@@ -25,45 +25,66 @@ directory it will compile the program with the name listdir.
 use system commands opendir, closedir, readdir, (getopt)
 */
 
-int main(int argc, char *argv[]) {
+bool hiddenflag = false;
 
+void printdir(const char path[]) {
+    // directory stream
+    DIR *d;
+    // file descriptor
+    struct dirent *file;
+
+    // get dirctory stream of current directory
+    d = opendir(path);
+    // handle error when d = NULL
+    if (!d) {
+        // perror(argv[0]);
+        // exit(1);
+        printf("Cannot access %s\n", path);
+        closedir(d);
+        // skip directory
+        return;
+    }
+
+    // list directory
+    printf("%s:\n", path);
+    // read and print all files
+    while ((file = readdir(d)) != NULL) {
+        // skip hidden files if hidden flag not set
+        if (!hiddenflag && file->d_name[0] == '.')
+            continue;
+        printf("  %s\n", file->d_name);
+    }
+
+    // close directory stream d and file descriptor file
+    closedir(d);
+}
+
+int main(int argc, char *argv[]) {
     // set h flag
-    bool hiddenflag = false;
-    for(int i = 1; i < argc; i++) {
-        if(argv[i][0] == '-' && argv[i][1] == 'h') {
-                hiddenflag = true;
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] == '-' && argv[i][1] == 'h') {
+            hiddenflag = true;
+            break;
         }
     }
 
-    // read all directories from paramaters
-    for(int i = 1; i < argc; i++) {
+    // when no parameters then use current directory
+    if(argc == 1 && !hiddenflag || argc == 2 && hiddenflag) {
+        const char path[] = {'.'};
+        printdir(path);
+        return 0;
+    }
+
+    // read all directories from parameters
+    for (int i = 1; i < argc; i++) {
         // skip flags
-        if(argv[i][0] == '-')
+        if (argv[i][0] == '-')
             continue;
-        
-        DIR *d;
-        struct dirent *dir;
-        
-        // handle error
-        d = opendir(argv[i]);
-        if (!d) {
-            //perror(argv[0]);
-            //exit(1);
-            printf("Cannot access %s\n", argv[i]);
-            closedir(d);
-            continue;
-        }
 
-        // list directory
-        printf("%s:\n", argv[i]);
-        while ((dir = readdir(d)) != NULL) {
-            // skip hidden files if hidden flag not set
-            if(!hiddenflag && dir->d_name[0] == '.')
-                continue;
-            printf("  %s\n", dir->d_name);
-        } 
+        // list files of directory if possible
+        printdir(argv[i]);
 
-        closedir(d);
+        printf("\n");
     }
 
     return 0;
