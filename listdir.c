@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include <unistd.h>
 
 /*
 1. If no command line arguments are given, the files and directories within the current
@@ -43,6 +44,7 @@ void printdir(const char path[]) {
         closedir(d);
         // skip directory
         return;
+        //exit(EXIT_FAILURE);
     }
 
     // list directory
@@ -61,18 +63,25 @@ void printdir(const char path[]) {
 
 int main(int argc, char *argv[]) {
     // set h flag
+    /*
     for (int i = 1; i < argc; i++) {
         if (argv[i][0] == '-' && argv[i][1] == 'h') {
             hiddenflag = true;
             break;
         }
     }
+    */
+    int opt = getopt(argc, argv, "h");
+    if(opt != -1) {
+        hiddenflag = true;
+    }
 
     // when no parameters then use current directory
     if(argc == 1 && !hiddenflag || argc == 2 && hiddenflag) {
         const char path[] = {'.'};
         printdir(path);
-        return 0;
+        //return 0;
+	    exit(EXIT_SUCCESS);
     }
 
     // read all directories from parameters
@@ -87,5 +96,6 @@ int main(int argc, char *argv[]) {
         printf("\n");
     }
 
-    return 0;
+    //return 0;
+    exit(EXIT_SUCCESS);
 }
