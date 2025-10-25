@@ -1,5 +1,8 @@
 # Ignore all
 *
+.*
 
-# Unignore all with extensions
+# Unignore all with extensions and more
 !*.*
+
+!Makefile
