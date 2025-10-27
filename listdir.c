@@ -76,12 +76,12 @@ int main(int argc, char *argv[]) {
         hiddenflag = true;
     }
 
-    // when no parameters then use current directory
-    if(argc == 1 && !hiddenflag || argc == 2 && hiddenflag) {
-        const char path[] = {'.'};
+    // when no path parameters then use current directory
+    if((argc == 1 && !hiddenflag) || (argc == 2 && hiddenflag)) {
+        const char path[] = ".";
         printdir(path);
-        //return 0;
-	    exit(EXIT_SUCCESS);
+        return 0;
+        exit(EXIT_SUCCESS);
     }
 
     // read all directories from parameters
