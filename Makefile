@@ -1,14 +1,17 @@
 CC := gcc
 # enable warnings and debug symbols
-CFLAGS := -Wall -g
+CFLAGS += -Wall -Werror -pedantic -std=c11 -g
+
+# with this a file named clean can still be used
+.PHONY: clean
 
 all: listdir helloworld
 
 listdir: listdir.c
-	cc $(CFLAGS) listdir.c -o listdir
+	$(CC) $(CFLAGS) $? -o $@
 
 helloworld: helloworld.c
-	cc $(CFLAGS) helloworld.c -o helloworld
+	$(CC) $(CFLAGS) $? -o $@
 
 clean:
 	@rm listdir helloworld

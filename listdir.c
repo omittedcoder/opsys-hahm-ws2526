@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <getopt.h>
 
 /*
 1. If no command line arguments are given, the files and directories within the current
