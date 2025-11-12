@@ -4,6 +4,8 @@
 # Unignore all with extensions and more
 !*.*
 !Makefile
+!solution
+!ex*
 
 # ignore vscode
 .vscode
