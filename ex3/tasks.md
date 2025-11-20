@@ -1,6 +1,10 @@
 # Wildcards and Filters
 
-1. Create in your home directory a directory VariousFiles. Navigate to this directory and create these files: `abcdefg.bat cdata3.sav cdata7.sav file3.txt file7.txt abcxyz.bat cdata4.sav file10.txt file4.txt file8.txt cdata1.sav cdata5.sav file1.txt file5.txt file9.txt cdata2.sav cdata6.sav file2.txt file6.txt xyzabc.bat`
+1. Create in your home directory a directory VariousFiles. Navigate to this directory and create these files:
+
+```bash
+touch abcdefg.bat cdata3.sav cdata7.sav file3.txt file7.txt abcxyz.bat cdata4.sav file10.txt file4.txt file8.txt cdata1.sav cdata5.sav file1.txt file5.txt file9.txt cdata2.sav cdata6.sav file2.txt file6.txt xyzabc.bat
+```
 
 2. Which command can be used to print out a list of all files in the directory, whose filenames start with the pattern file?
 
