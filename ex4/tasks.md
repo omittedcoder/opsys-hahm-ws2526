@@ -2,6 +2,9 @@
 
 1. Create in your home directory a directory **OpSys**.
     ```bash
+    cd
+    #cd ~
+    #cd /home/user
     mkdir OpSys
     ```
 
@@ -26,7 +29,8 @@
 
 5. Print out the first line of the file **File2.txt** in the shell.
     ```bash
-    cat File2.txt | head -n 1
+    head -n 1 File2.txt
+    #cat File2.txt | head -n 1
     ```
 
 6. Append the content of **File2.txt** to **File1.txt**. (Do not use an editor application, but a command line command.)
