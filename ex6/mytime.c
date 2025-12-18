@@ -28,23 +28,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-enum { NS_PER_SECOND = 1000000000 };
-
-void sub_timespec(struct timespec t1, struct timespec t2, struct timespec *td)
-{
-    td->tv_nsec = t2.tv_nsec - t1.tv_nsec;
-    td->tv_sec  = t2.tv_sec - t1.tv_sec;
-    if (td->tv_sec > 0 && td->tv_nsec < 0)
-    {
-        td->tv_nsec += NS_PER_SECOND;
-        td->tv_sec--;
-    }
-    else if (td->tv_sec < 0 && td->tv_nsec > 0)
-    {
-        td->tv_nsec -= NS_PER_SECOND;
-        td->tv_sec++;
-    }
-}
+enum { NS_PER_MS = 1000000 };
 
 int main(int argc, char *argv[]) {
 
@@ -53,9 +37,6 @@ int main(int argc, char *argv[]) {
         printf("mytime [PROGRAM] <ARGS OF PROGRAM>");
         exit(EXIT_FAILURE);
     }
-
-    struct timespec start, finish, delta;
-    clock_gettime(CLOCK_REALTIME, &start);
 
     // fork
     int pid = fork();
@@ -68,7 +49,7 @@ int main(int argc, char *argv[]) {
 
     // If PID!=0 --> Parent process
     if (pid) {
-        
+
     }
     // If PID=0 --> Child process
     else {
@@ -85,12 +66,11 @@ int main(int argc, char *argv[]) {
         // Current program is replaced by prog
         // prog will be the process name in the process table
         execvp(prog, args);
-        
     }
 
-    clock_gettime(CLOCK_REALTIME, &finish);
-    sub_timespec(start, finish, &delta);
-    printf("%d.%.9ld\n", (int)delta.tv_sec, delta.tv_nsec);
+    struct timespec cpu_time;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu_time);
+    printf("%d.%.9ld\n", (int)cpu_time.tv_sec, cpu_time.tv_nsec);
 
     exit(EXIT_SUCCESS);
 }
