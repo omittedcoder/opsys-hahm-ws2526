@@ -2,7 +2,9 @@
 *
 
 # Unignore all with extensions and more
-!*.*
+!*.c
+!*.sh
+!*.md
 !Makefile
 !solution
 !ex*

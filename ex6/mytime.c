@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+enum { MS_PER_S = 1000 };
 enum { NS_PER_MS = 1000000 };
 
 int main(int argc, char *argv[]) {
@@ -38,8 +39,18 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    // time delta
+    struct timespec start, end;
+
+    // get start timestamp
+    if (clock_gettime(CLOCK_MONOTONIC, &start) == -1) {
+        perror("clock_gettime");
+        return 1;
+    }
+
     // fork
-    int pid = fork();
+    int status; // status of child
+    pid_t pid = fork();
     if (pid < 0) {
         // If fork() returns -1, an error happened.
         // Memory or processes table have no more free capacity.
@@ -49,7 +60,17 @@ int main(int argc, char *argv[]) {
 
     // If PID!=0 --> Parent process
     if (pid) {
+        // wait for child to complete
+        if (waitpid(pid, &status, 0) == -1) {
+            perror("waitpid");
+            return 1;
+        }
 
+        // get end timestamp
+        if (clock_gettime(CLOCK_MONOTONIC, &end) == -1) {
+            perror("clock_gettime");
+            return 1;
+        }
     }
     // If PID=0 --> Child process
     else {
@@ -66,11 +87,15 @@ int main(int argc, char *argv[]) {
         // Current program is replaced by prog
         // prog will be the process name in the process table
         execvp(prog, args);
+        perror("execvp");
+        exit(EXIT_FAILURE);
     }
 
-    struct timespec cpu_time;
-    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &cpu_time);
-    printf("%d.%.9ld\n", (int)cpu_time.tv_sec, cpu_time.tv_nsec);
+    long seconds = end.tv_sec - start.tv_sec;
+    long nanoseconds = end.tv_nsec - start.tv_nsec;
+    long milliseconds = seconds * MS_PER_S + nanoseconds / NS_PER_MS;
+
+    printf("Runtime: %ld ms\n", milliseconds);
 
     exit(EXIT_SUCCESS);
 }

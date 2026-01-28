@@ -25,16 +25,17 @@ int main(int argc, char **argv) {
   
   if (pid > 0) {
     // Parent
-    //printf("Parent: PID=%i, PPID=%i", getpid(), getppid());
-    printf("Child: PID=%i, PPID=%i", pid, getpid());
+    printf("Parent: PID=%i, PPID=%i\n", getpid(), getppid());
+    printf("Child: PID=%i, PPID=%i\n", pid, getpid());
     
     // time for child process to be zombie
-    sleep(60);
+    //sleep(60);
     
     // wait for child process
-    int *status = NULL;
-    wait(status);
-    printf("Child(%i) -> %i", pid, *status);
+    //int *status = NULL;
+    //wait(status);
+    //printf("Child(%i) -> %i", pid, *status);
+    getchar();
   }
   
   if (pid == 0) {
